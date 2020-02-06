@@ -24,6 +24,7 @@ CPU=16
 ## Run suffixerator to make a suffix array of the genome for genometools ##
 ###########################################################################
 
+## for each chromosome in maize, taking < 10mins and 60GB (could be reduced) to complete
 $GENOMETOOLS suffixerator -db $GENOMEFASTA -indexname $GENOME -tis -suf -lcp -des -ssp -sds -dna -memlimit $MEMLIM
 
 #####################
@@ -33,6 +34,7 @@ $GENOMETOOLS suffixerator -db $GENOMEFASTA -indexname $GENOME -tis -suf -lcp -de
 mkdir -p outinner
 
 ## all defaults except for maxdistltr (default 15000)
+## for each chromosome in maize, taking < 30 mins and 60GB (could be reduced) to complete
 $GENOMETOOLS ltrharvest -index $GENOME -gff3 $GENOME.ltrharvest.gff3 -motif tgca -minlenltr 100 -maxlenltr 7000 -mindistltr 1000 -maxdistltr 20000 -similar 85 -motifmis 1 -mintsd 5 -xdrop 5 -overlaps best -longoutput -outinner outinner/${GENOME}.ltrharvest.outinner.fa -out ${GENOME}.ltrharvest.fa > ${GENOME}.ltrharvest.out
 
 $GENOMETOOLS gff3 -sort $GENOME.ltrharvest.gff3 > $GENOME.ltrharvest.sorted.gff3
@@ -42,7 +44,7 @@ $GENOMETOOLS gff3 -sort $GENOME.ltrharvest.gff3 > $GENOME.ltrharvest.sorted.gff3
 ###################
 
 mkdir -p ltrdigest
-
+## for each chromosome in maize, taking >16hrs and 60GB (but reminding Disk quota exceeded) and incomplete
 $GENOMETOOLS -j 16 ltrdigest -outfileprefix ltrdigest/$GENOME.ltrdigest -trnas eukaryotic-tRNAs.fa -hmms gydb_hmms/GyDB_collection/profiles/*.hmm -- $GENOME.ltrharvest.sorted.gff3 $GENOME > $GENOME.ltrdigest.gff3
 
 
